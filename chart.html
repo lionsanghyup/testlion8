@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+    <style>
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        ol,
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        li {
+            display: inline-table;
+        }
+
+        #chart {
+            position: relative;
+            height: 60vh;
+            width: 60vh;
+            top: 15%;
+            margin: auto;
+        }
+
+        #chartjs-legend {
+            position: absolute;
+            width: 100%;
+            bottom: 10%;
+        }
+
+        #chartjs-legend li {
+            cursor: pointer;
+            margin: 10px 4px;
+        }
+
+        #chartjs-legend li span {
+            position: relative;
+            padding: 6px 20px;
+            border-radius: 13px;
+            color: white;
+            z-index: 2;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width: 500px; height: 500px;">
+        <canvas id="piee-chart" width="800" height="450"></canvas>
+    </div>
+
+    <div class="canvas-con">
+        <div class="canvas-con-inner">
+            <canvas id="mychart" height="250px"></canvas>
+        </div>
+        <div id="my-legend-con" class="legend-con"></div>
+    </div>
+
+</body>
+
+
+<script type="text/javascript">
+
+    let data = [60, 20, 0, 0, 10, 10]
+
+    window.onload = function () {
+        let data = [{
+            data: [60, 20, 0, 0, 10, 10],
+            backgroundColor: ["#FF3D67", "#FF9124", "#FFC233", "#22CECE", "#059BFF", "#8142FF"],
+            borderColor: "#fff"
+        }];
+        let options = {
+            
+            title: {
+                display: true,
+                text: '강의진행',
+                fontSize: 20,
+            },
+            legend: {                
+                position: 'left',
+            },
+            plugins: {
+                datalabels: {
+                    formatter: function (value, ctx) {
+                        let datasets = ctx.chart.data.datasets;
+                        if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
+                            let sum = datasets[0].data.reduce((a, b) => a + b, 0);
+                            let percentage = Math.round((value / sum) * 100) + '%';
+                            if (percentage == '0%') {
+                                return '';
+                            }
+                            return percentage;
+                        } else {
+                            return percentage;
+                        }
+                    },
+                    color: '#fff',
+                },
+            }
+        }
+        let ctx = document.getElementById("piee-chart").getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ["강의", "토의/토론", "실험/실습", "현장학습", "개별/팀별발표", "기타"],
+                datasets: data
+            },
+            options: options
+        });
+    }
+
+</script>
+
+</html>
